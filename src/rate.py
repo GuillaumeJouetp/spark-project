@@ -18,7 +18,7 @@ topMovies = """1,Toy Story (1995)
 231,Dumb & Dumber (1994)"""
 
 parentDir = dirname(dirname(__file__))
-ratingsFile = join(parentDir, "personalRatings.txt")
+ratingsFile = join(parentDir, "src/datas/personalRatings.txt")
 
 if isfile(ratingsFile):
     r = input("Looks like you've already rated the movies. Overwrite ratings (y/N)? ")
