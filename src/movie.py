@@ -151,9 +151,11 @@ if __name__ == "__main__":
     predictions = bestModel.predictAll(candidates.map(lambda x: (0, x))).collect()
     recommendations = sorted(predictions, key=lambda x: x[2], reverse=True)[:50]
 
+    print("Recommendations len : ", len(recommendations))
     print("Movies recommended for you:")
     for i in range(len(recommendations)):
-        print("%2d: %s" % (i + 1, movies[recommendations[i][1]])).encode('ascii', 'ignore')
+        print("%2d: %s" % (i + 1, movies[recommendations[i][1]]))
+
 
     # clean up
     sc.stop()
