@@ -1,7 +1,7 @@
 ################################# Programme Spark en Python ####################################
 from pyspark import SparkContext
 
-datas = "datas.csv"
+datas = "datas/datas.csv"
 sc = SparkContext("local", "first app")
 
 # lecture et distribution du fichier
@@ -42,7 +42,7 @@ from pyspark.mllib.clustering import KMeans
 from math import sqrt
 
 # Lire et "distribuer" les données
-data = sc.textFile("datas2.txt")
+data = sc.textFile("datas/datas2.txt")
 parsedData = data.map(lambda line: array([float(x) for x in line.split(' ')]))
 parsedData.collect()
 
