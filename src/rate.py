@@ -5,17 +5,17 @@ from os import remove, removedirs
 from os.path import dirname, join, isfile
 from time import time
 
-topBooks = """0195153448, Classical Mythology by Mark P. O. Morford 2002 
-0345260317, The Dragons of Eden: Speculations on the Evolution of Human Intelligence by Carl Sagan 1978
-0312252617,Fast Women by Jennifer Crusie 2001
-0553278223,The Martian Chronicles by RAY BRADBURY 1984
-0385511612,Bleachers by John Grisham 2003
-0151008116,Life of Pi by Yann Martel 2002
-0060013117,Night Watch by Terry Pratchett 2002
-0380973839,Martian Chronicles by Ray Bradbury 1997
-0553571486,Angel of Hope (Mercy Trilogy) by Lurlene McDaniel 2000
-055329198X,Wolf Moon by John R. Holt 1997
-0312995423,Digital Fortress : A Thriller by Dan Brown 2003"""
+topBooks = """1, Classical Mythology by Mark P. O. Morford 2002 
+65, The Dragons of Eden: Speculations on the Evolution of Human Intelligence by Carl Sagan 1978
+97,Fast Women by Jennifer Crusie 2001
+176,The Martian Chronicles by RAY BRADBURY 1984
+222,Bleachers by John Grisham 2003
+247,Life of Pi by Yann Martel 2002
+255,Night Watch by Terry Pratchett 2002
+278,Martian Chronicles by Ray Bradbury 1997
+319,Angel of Hope (Mercy Trilogy) by Lurlene McDaniel 2000
+327,Wolf Moon by John R. Holt 1997
+359,Digital Fortress : A Thriller by Dan Brown 2003"""
 
 parentDir = dirname(dirname(__file__))
 ratingsFile = join(parentDir, "src/datas/personalRatings.txt")

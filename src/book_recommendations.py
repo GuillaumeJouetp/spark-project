@@ -18,7 +18,9 @@ def parseRating(line):
     """
     fields = line.strip().split(";")
     fields.append(random.randint(1463782, 37483201))
-    return int(fields[3]) % 10, (int(fields[0]), str(fields[1]), float(fields[2]))
+
+    return int(fields[3]) % 10, (int(fields[0]), int(fields[1]), float(fields[2]))
+
 
 
 def parseMovie(line):
@@ -26,7 +28,8 @@ def parseMovie(line):
     Parses a book record format bookISBN;bookTitle .
     """
     fields = line.strip().split(";")
-    return str(fields[0]), fields[1]
+
+    return int(fields[0]), fields[1]
 
 
 def loadRatings(ratingsFile):
