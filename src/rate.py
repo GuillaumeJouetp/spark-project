@@ -45,7 +45,7 @@ for line in topBooks.split("\n"):
         else:
             valid = True
             if r > 0:
-                f.write("0::%s::%d::%d\n" % (ls[0], r, now))
+                f.write("0;%s;%d;%d\n" % (ls[0], r, now))
                 n += 1
 f.close()
 

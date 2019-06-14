@@ -1,7 +1,7 @@
 import sys
-import uuid
 
 import itertools
+import random
 from math import sqrt
 from operator import add
 from os.path import join, isfile, dirname
@@ -9,13 +9,16 @@ from os.path import join, isfile, dirname
 from pyspark import SparkConf, SparkContext
 from pyspark.mllib.recommendation import ALS
 
+def convertToNumber (s):
+    return int.from_bytes(s.encode(), 'little')
 
 def parseRating(line):
     """
     Parses a rating record in MovieLens format userId;bookISBN;rating(::timestamp) .
     """
     fields = line.strip().split(";")
-    return str(uuid.uuid1()), (int(fields[0]), str(fields[1]), float(fields[2]))
+    fields.append(random.randint(1463782, 37483201))
+    return int(fields[3]) % 10, (int(fields[0]), str(fields[1]), float(fields[2]))
 
 
 def parseMovie(line):
@@ -23,7 +26,7 @@ def parseMovie(line):
     Parses a book record format bookISBN;bookTitle .
     """
     fields = line.strip().split(";")
-    return int(fields[0]), fields[1]
+    return str(fields[0]), fields[1]
 
 
 def loadRatings(ratingsFile):
