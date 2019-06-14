@@ -1,4 +1,6 @@
 import sys
+import uuid
+
 import itertools
 from math import sqrt
 from operator import add
@@ -10,17 +12,17 @@ from pyspark.mllib.recommendation import ALS
 
 def parseRating(line):
     """
-    Parses a rating record in MovieLens format userId::movieId::rating::timestamp .
+    Parses a rating record in MovieLens format userId;bookISBN;rating(::timestamp) .
     """
-    fields = line.strip().split("::")
-    return int(fields[3]) % 10, (int(fields[0]), int(fields[1]), float(fields[2]))
+    fields = line.strip().split(";")
+    return str(uuid.uuid1()), (int(fields[0]), str(fields[1]), float(fields[2]))
 
 
 def parseMovie(line):
     """
-    Parses a movie record in MovieLens format movieId::movieTitle .
+    Parses a book record format bookISBN;bookTitle .
     """
-    fields = line.strip().split("::")
+    fields = line.strip().split(";")
     return int(fields[0]), fields[1]
 
 
@@ -55,13 +57,13 @@ def computeRmse(model, data, n):
 if __name__ == "__main__":
     if (len(sys.argv) != 3):
         print("Usage: /path/to/spark/bin/spark-submit --driver-memory 2g " + \
-        "MovieLensALS.py movieLensDataDir personalRatingsFile")
+        "book_recommendation.py BooksDataDir personalRatingsFile")
         sys.exit(1)
 
     # set up environment
     conf = SparkConf() \
-        .setAppName("MovieLensALS") \
-        .set("spark.executor.memory", "2g")
+        .setAppName("bookALS") \
+        .set("spark.executor.memory", "8g")
     sc = SparkContext(conf=conf)
 
     # load personal ratings
@@ -70,13 +72,13 @@ if __name__ == "__main__":
 
     # load ratings and movie titles
 
-    movieLensHomeDir = sys.argv[1] #TODO HARDCODE
+    movieLensHomeDir = sys.argv[1]
 
     # ratings is an RDD of (last digit of timestamp, (userId, movieId, rating))
-    ratings = sc.textFile(join(movieLensHomeDir, "ratings.dat")).map(parseRating)
+    ratings = sc.textFile(join(movieLensHomeDir, "BX-Book-Ratings.csv")).map(parseRating)
 
     # movies is an RDD of (movieId, movieTitle)
-    movies = dict(sc.textFile(join(movieLensHomeDir, "movies.dat")).map(parseMovie).collect())
+    movies = dict(sc.textFile(join(movieLensHomeDir, "BX-Books.csv")).map(parseMovie).collect())
 
     numRatings = ratings.count()
     numUsers = ratings.values().map(lambda r: r[0]).distinct().count()
