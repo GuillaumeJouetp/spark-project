@@ -14,7 +14,7 @@ def convertToNumber (s):
 
 def parseRating(line):
     """
-    Parses a rating record in MovieLens format userId;bookISBN;rating(::timestamp) .
+    Parses a rating record in books format userId;bookISBN;rating(::timestamp) .
     """
     fields = line.strip().split(";")
     fields.append(random.randint(1463782, 37483201))
@@ -23,7 +23,7 @@ def parseRating(line):
 
 
 
-def parseMovie(line):
+def parseBook(line):
     """
     Parses a book record format bookISBN;bookTitle .
     """
@@ -76,26 +76,26 @@ if __name__ == "__main__":
     myRatings = loadRatings(sys.argv[2])
     myRatingsRDD = sc.parallelize(myRatings, 1)
 
-    # load ratings and movie titles
+    # load ratings and book titles
 
-    movieLensHomeDir = sys.argv[1]
+    booksHomeDir = sys.argv[1]
 
-    # ratings is an RDD of (last digit of timestamp, (userId, movieId, rating))
-    ratings = sc.textFile(join(movieLensHomeDir, "BX-Book-Ratings.csv")).map(parseRating)
+    # ratings is an RDD of (last digit of timestamp, (userId, bookId, rating))
+    ratings = sc.textFile(join(booksHomeDir, "BX-Book-Ratings.csv")).map(parseRating)
 
-    # movies is an RDD of (movieId, movieTitle)
-    movies = dict(sc.textFile(join(movieLensHomeDir, "BX-Books.csv")).map(parseMovie).collect())
+    # books is an RDD of (bookId, bookTitle)
+    books = dict(sc.textFile(join(booksHomeDir, "BX-Books.csv")).map(parseBook).collect())
 
     numRatings = ratings.count()
     numUsers = ratings.values().map(lambda r: r[0]).distinct().count()
-    numMovies = ratings.values().map(lambda r: r[1]).distinct().count()
+    numBooks = ratings.values().map(lambda r: r[1]).distinct().count()
 
-    print("Got %d ratings from %d users on %d movies." % (numRatings, numUsers, numMovies))
+    print("Got %d ratings from %d users on %d books." % (numRatings, numUsers, numBooks))
 
     # split ratings into train (60%), validation (20%), and test (20%) based on the
     # last digit of the timestamp, add myRatings to train, and cache them
 
-    # training, validation, test are all RDDs of (userId, movieId, rating)
+    # training, validation, test are all RDDs of (userId, bookId, rating)
 
     numPartitions = 4
     training = ratings.filter(lambda x: x[0] < 6) \
@@ -154,15 +154,15 @@ if __name__ == "__main__":
 
     # make personalized recommendations
 
-    myRatedMovieIds = set([x[1] for x in myRatings])
-    candidates = sc.parallelize([m for m in movies if m not in myRatedMovieIds])
+    myRatedBookIds = set([x[1] for x in myRatings])
+    candidates = sc.parallelize([m for m in books if m not in myRatedBookIds])
     predictions = bestModel.predictAll(candidates.map(lambda x: (0, x))).collect()
     recommendations = sorted(predictions, key=lambda x: x[2], reverse=True)[:50]
 
     print("Recommendations len : ", len(recommendations))
-    print("Movies recommended for you:")
+    print("Books recommended for you:")
     for i in range(len(recommendations)):
-        print("%2d: %s" % (i + 1, movies[recommendations[i][1]]))
+        print("%2d: %s" % (i + 1, books[recommendations[i][1]]))
 
 
     # clean up
