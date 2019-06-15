@@ -14,7 +14,7 @@ def convertToNumber (s):
 
 def parseRating(line):
     """
-    Parses a rating record in books format userId;bookISBN;rating(::timestamp) .
+    Parses a rating record in books format userId;bookId;rating(;random value).
     """
     fields = line.strip().split(";")
     fields.append(random.randint(1463782, 37483201))
@@ -25,7 +25,7 @@ def parseRating(line):
 
 def parseBook(line):
     """
-    Parses a book record format bookISBN;bookTitle .
+    Parses a book record format bookId;bookTitle .
     """
     fields = line.strip().split(";")
 
